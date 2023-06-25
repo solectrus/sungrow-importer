@@ -32,11 +32,11 @@ class Import
     count = 0
     records =
       CSV
-        .parse(File.read(filename), headers: true, col_sep: ';')
+        .parse(File.read(filename), headers: true, col_sep: ',')
         .map do |row|
           count += 1
 
-          SolectrusRecord.new(row).to_h
+          SolectrusRecord.new(row, measurement: config.influx_measurement).to_h
         end
 
     return unless count.positive?

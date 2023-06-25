@@ -1,14 +1,14 @@
-[![Continuous integration](https://github.com/solectrus/senec-importer/actions/workflows/push.yml/badge.svg)](https://github.com/solectrus/senec-importer/actions/workflows/push.yml)
-[![wakatime](https://wakatime.com/badge/user/697af4f5-617a-446d-ba58-407e7f3e0243/project/0fd4e23c-13b0-43a6-bfe0-2f235cbe9785.svg)](https://wakatime.com/badge/user/697af4f5-617a-446d-ba58-407e7f3e0243/project/0fd4e23c-13b0-43a6-bfe0-2f235cbe9785)
+[![Continuous integration]https://github.com/solectrus/sungrow-importer.git/actions/workflows/push.yml/badge.svg)]https://github.com/solectrus/sungrow-importer.git/actions/workflows/push.yml)
+[![wakatime](https://wakatime.com/badge/user/697af4f5-617a-446d-ba58-407e7f3e0243/project/f8429171-106d-4ef2-877c-b5fd73495e6e.svg)](https://wakatime.com/badge/user/697af4f5-617a-446d-ba58-407e7f3e0243/project/f8429171-106d-4ef2-877c-b5fd73495e6e)
 
-# SENEC importer
+# Sungrow importer
 
-Import CSV data downloaded from mein-senec.de and push it to InfluxDB.
+Import CSV data downloaded from portaleu.isolarcloud.com and push it to InfluxDB.
 
 ## Requirements
 
 - SOLECTRUS installed and running
-- CSV files downloaded from mein-senec.de
+- CSV files downloaded from portaleu.isolarcloud.com
 
 ## Usage
 
@@ -22,7 +22,7 @@ docker run -it --rm \
            --env-file .env \
            --mount type=bind,source="$PWD/csv",target=/data,readonly \
            --network=solectrus_default \
-           ghcr.io/solectrus/senec-importer
+           ghcr.io/solectrus/sungrow-importer
 ```
 
 (Name of the network may vary, see `docker network ls`)
@@ -56,23 +56,6 @@ Second note: Check the `.env` variable `INSTALLATION_DATE`. This must be set to 
 | `IMPORT_FOLDER`                        | Folder where CSV files are located              | `/data` |
 | `IMPORT_PAUSE`                         | Pause after each imported file (in seconds)     | `0`     |
 
-## Dealing with missing wallbox measurements
-
-The CSV data from mein-senec.de is not complete, there are no measurements for the wallbox. To get around this, wallbox charges are **estimated** using the following formula:
-
-```
-wallbox_charge_power =   inverter_power (Stromerzeugung)
-                       + grid_power_plus (Netzbezug)
-                       + bat_power_minus (Akkuentnahme)
-                       - grid_power_minus (Netzeinspeisung)
-                       - house_power (Stromverbrauch)
-                       - bat_power_plus (Akkubeladung)
-```
-
-Please note that this method appears to be ineffective for processing CSV files that were created from July 2022 onwards. This is because wallbox charges are now being included in the overall house consumption since that time. Therefore, it seems that there is currently no way to import wallbox measurements.
-
-The [senec-collector](https://github.com/solectrus/senec-collector) does not have this problem, as it obtains the wallbox measurements directly.
-
 ## License
 
-Copyright (c) 2020-2023 Georg Ledermann, released under the MIT License
+Copyright (c) 2023 Georg Ledermann, released under the MIT License
